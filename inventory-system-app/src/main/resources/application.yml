@@ -3,6 +3,20 @@ logging.level:
 spring:
   application:
     name: digital-product
+  jpa:
+    show-sql: ${SHOW_SQL:false}
+  datasource:
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+  jmx:
+    enabled: false
+flyway:
+  enabled: true
+  schemas: ${FLYWAY_SCHEMA}
+  url: ${FLYWAY_URL}
+  user: ${FLYWAY_USER}
+  password: ${FLYWAY_PASSWORD}
 
 management:
   endpoint:

@@ -4,9 +4,11 @@ import com.demo.digitalproduct.dto.ProductDto;
 import com.demo.digitalproduct.entity.Product;
 import com.demo.digitalproduct.entity.ProductDetail;
 import com.demo.digitalproduct.repository.ProductRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Service
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;

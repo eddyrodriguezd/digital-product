@@ -26,6 +26,8 @@
         <spring.version>2.6.4</spring.version>
         <lombok.version>1.18.22</lombok.version>
         <commons-lang.version>3.12.0</commons-lang.version>
+        <flyway.version>8.5.1</flyway.version>
+        <postgres.version>42.3.3</postgres.version>
 
         <inventory-system.version>1.0-SNAPSHOT</inventory-system.version>
     </properties>
@@ -60,11 +62,12 @@
             <dependency>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-core</artifactId>
+                <version>${flyway.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <scope>runtime</scope>
+                <version>${postgres.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>

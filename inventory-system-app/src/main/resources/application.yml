@@ -25,7 +25,8 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include:
+          - health
 
 digital-product:
   config:

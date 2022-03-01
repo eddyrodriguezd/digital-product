@@ -31,9 +31,6 @@ public class ProductDetail implements Serializable {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    private double currentPrice;
-    private double currentStock;
-
     private boolean visible;
 
     @CreationTimestamp

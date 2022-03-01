@@ -1,3 +1,9 @@
+logging.level:
+  com.falabella.rplm: DEBUG
+spring:
+  application:
+    name: digital-product
+
 management:
   endpoint:
     health:
@@ -6,3 +12,7 @@ management:
     web:
       exposure:
         include: "*"
+
+digital-product:
+  config:
+      product-external-info-endpoint: ${PRODUCT_EXT_INFO_ENDPOINT}

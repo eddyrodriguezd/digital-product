@@ -58,7 +58,10 @@ public class ProductServiceImpl implements ProductService {
 
         ProductExternalInfoSuccessResponse productResponse;
         try {
-            productResponse = (productClient.getProductExternalInfo(productId)).getBody();
+            productResponse = productClient.getProductExternalInfo(productId).getBody();
+
+            if(productResponse == null) throw new ProductNotFoundInApiException();
+
             log.info("Product info retrieved from Price and Stock Information Server = <{}>",
                     StringUtils.normalizeSpace(productResponse.toString()));
         }

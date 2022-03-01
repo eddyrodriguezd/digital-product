@@ -5,6 +5,7 @@ import com.demo.digitalproduct.exception.ApiException;
 import com.demo.digitalproduct.exception.IllegalUUID;
 import com.demo.digitalproduct.repository.exception.ProductNotFoundInDatabaseException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     })
     protected ResponseEntity<Object> handleInvalidURL(RuntimeException exception, WebRequest request) {
         ApiException ex = (ApiException) exception;
-        log.info(ex.getBody().getMessage());
+        log.error("Exception encountered: " + StringUtils.normalizeSpace(ex.getBody().toString()));
         return handleExceptionInternal(ex, ex.getBody(), new HttpHeaders(), ex.getBody().getStatus(), request);
     }
 

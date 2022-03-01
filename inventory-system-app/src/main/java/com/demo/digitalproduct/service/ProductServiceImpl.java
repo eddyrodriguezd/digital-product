@@ -9,6 +9,8 @@ import com.demo.digitalproduct.entity.Product;
 import com.demo.digitalproduct.entity.ProductDetail;
 import com.demo.digitalproduct.repository.ProductRepository;
 import com.demo.digitalproduct.repository.exception.ProductNotFoundInDatabaseException;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -16,6 +18,7 @@ import java.util.UUID;
 import static com.demo.digitalproduct.helper.UuidHelper.getStringFromUUID;
 
 @Service
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -39,6 +42,7 @@ public class ProductServiceImpl implements ProductService {
                         )
                         .build()
         );
+        log.info("Product <{}> saved in database", StringUtils.normalizeSpace(product.toString()));
 
         productDto.setId(product.getId().toString());
         return productDto;
@@ -48,10 +52,15 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto getProductById(String productId) {
         Product product = productRepository.findById(getStringFromUUID(productId))
                 .orElseThrow(ProductNotFoundInDatabaseException::new);
+        log.info("Product with id = <{}> found in database: <{}>",
+                productId,
+                StringUtils.normalizeSpace(product.toString()));
 
         ProductExternalInfoSuccessResponse productResponse;
         try {
             productResponse = (productClient.getProductExternalInfo(productId)).getBody();
+            log.info("Product info retrieved from Price and Stock Information Server = <{}>",
+                    StringUtils.normalizeSpace(productResponse.toString()));
         }
         catch (ProductNotFoundInApiException e) {
             productResponse = ProductExternalInfoSuccessResponse.builder()
@@ -59,6 +68,8 @@ public class ProductServiceImpl implements ProductService {
                     .price(0)
                     .stock(0)
                     .build();
+            log.info("Price and Stock Information Server does not have information about product with id = <{}>. " +
+                    "Therefore, these attributes will be set to 0.", productId);
         }
 
         return ProductDto.builder()
@@ -78,7 +89,7 @@ public class ProductServiceImpl implements ProductService {
         if(!productRepository.existsById(getStringFromUUID(productId)))
             throw new ProductNotFoundInDatabaseException();
 
-        productRepository.save(
+        Product product = productRepository.save(
                 Product.builder()
                         .id(UUID.fromString(productId))
                         .sku(productDto.getSku())
@@ -90,6 +101,7 @@ public class ProductServiceImpl implements ProductService {
                         )
                         .build()
         );
+        log.info("Product <{}> updated in database", product);
 
         return productDto;
     }

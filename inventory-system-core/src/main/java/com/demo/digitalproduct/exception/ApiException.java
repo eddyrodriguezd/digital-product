@@ -31,5 +31,10 @@ public class ApiException extends RuntimeException {
             this.status = status;
             this.message = message;
         }
+
+        @Override
+        public String toString() {
+            return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
+        }
     }
 }

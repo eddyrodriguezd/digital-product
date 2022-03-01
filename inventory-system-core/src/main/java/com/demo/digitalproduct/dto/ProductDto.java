@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -14,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ProductDto implements Serializable {
 
-    private UUID id;
+    private String id;
 
     private String sku;
 

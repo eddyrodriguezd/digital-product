@@ -5,5 +5,9 @@ import com.demo.digitalproduct.entity.Product;
 
 public interface ProductService {
 
-    Product createProduct(ProductDto productDto);
+    ProductDto createProduct(ProductDto productDto);
+
+    ProductDto getProductById(String id);
+
+    ProductDto updateProduct(String id, ProductDto productDto);
 }

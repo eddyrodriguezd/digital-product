@@ -28,6 +28,7 @@
         <commons-lang.version>3.12.0</commons-lang.version>
         <flyway.version>8.5.1</flyway.version>
         <postgres.version>42.3.3</postgres.version>
+        <jedis.version>3.7.1</jedis.version>
 
         <jacoco.version>0.8.7</jacoco.version>
         <maven-pmd-plugin.version>3.15.0</maven-pmd-plugin.version>
@@ -62,6 +63,22 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-jpa</artifactId>
                 <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${spring.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.lettuce</groupId>
+                        <artifactId>lettuce-core</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${jedis.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.flywaydb</groupId>

@@ -24,9 +24,14 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductExternalInfoClient productClient;
 
-    public ProductServiceImpl(ProductRepository productRepository, ProductExternalInfoClient productClient) {
+    private final CacheService cacheService;
+
+    public ProductServiceImpl(ProductRepository productRepository,
+                              ProductExternalInfoClient productClient,
+                              CacheService cacheService) {
         this.productRepository = productRepository;
         this.productClient = productClient;
+        this.cacheService = cacheService;
     }
 
     @Override
@@ -50,11 +55,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto getProductById(String productId) {
-        Product product = productRepository.findById(getStringFromUUID(productId))
-                .orElseThrow(ProductNotFoundInDatabaseException::new);
-        log.info("Product with id = <{}> found in database: <{}>",
-                productId,
-                StringUtils.normalizeSpace(product.toString()));
+        Product product = this.findById(productId);
 
         ProductExternalInfoSuccessResponse productResponse;
         try {
@@ -89,8 +90,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto updateProduct(String productId, ProductDto productDto) {
-        if(!productRepository.existsById(getStringFromUUID(productId)))
-            throw new ProductNotFoundInDatabaseException();
+        if(!this.existsById(productId)) throw new ProductNotFoundInDatabaseException();
 
         Product product = productRepository.save(
                 Product.builder()
@@ -107,5 +107,30 @@ public class ProductServiceImpl implements ProductService {
         log.info("Product <{}> updated in database", product);
 
         return productDto;
+    }
+
+    private Product findById(String productId) throws ProductNotFoundInDatabaseException {
+        Product productFromCache = cacheService.getFromCache(productId);
+
+        if(productFromCache != null) return productFromCache;
+
+        Product product = productRepository.findById(getStringFromUUID(productId))
+                .orElseThrow(ProductNotFoundInDatabaseException::new);
+
+        log.info("Product with id = <{}> found in database: <{}>",
+                productId,
+                StringUtils.normalizeSpace(product.toString()));
+
+        cacheService.saveToCache(product);
+
+        return product;
+    }
+
+    private boolean existsById(String productId) {
+        Product productFromCache = cacheService.getFromCache(productId);
+
+        if(productFromCache != null) return true;
+
+        return productRepository.existsById(getStringFromUUID(productId));
     }
 }

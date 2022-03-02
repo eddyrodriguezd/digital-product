@@ -10,4 +10,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class AppConfig {
 
     private String productExternalInfoEndpoint;
+
+    private Cache cache;
+
+
+    @Data
+    @NoArgsConstructor
+    public static class Cache {
+        private String host;
+        private int port;
+        private String password;
+        private int duration;
+    }
 }

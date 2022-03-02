@@ -34,3 +34,8 @@ management:
 digital-product:
   config:
       product-external-info-endpoint: ${PRODUCT_EXT_INFO_ENDPOINT}
+      cache:
+        host: ${CACHE_HOST}
+        port: ${CACHE_PORT}
+        password: ${CACHE_PASSWORD}
+        duration: ${CACHE_DURATION_MINUTES:5}

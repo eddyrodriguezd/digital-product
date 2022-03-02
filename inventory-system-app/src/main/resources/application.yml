@@ -1,5 +1,8 @@
-logging.level:
-  com.falabella.rplm: DEBUG
+logging:
+  level:
+    com.demo.digitalproduct: INFO
+  file.name: logs/application-info.log
+
 spring:
   application:
     name: digital-product

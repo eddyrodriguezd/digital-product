@@ -1,0 +1,9 @@
+{
+  "sku": "RM034LPS",
+  "description" : "Dell Inspiron 15",
+  "detail": {
+    "currentPrice": 879.99,
+    "currentStock": 5,
+    "visible": true
+  }
+}

@@ -1,8 +1,8 @@
 # Digital Product System
-Simple inventory system that stores products' information. It has been developed in Java using Spring Framework and includes unit and integration testing with JUnit 5 and Mockito. It uses PostgreSQL as its main database and Redis as an in-memory cache.
+Simple inventory system that stores products' information. It has been developed in Java using Spring Framework and includes unit and integration testing with JUnit 5 and Mockito. It uses PostgreSQL as its main database and Redis as an in-memory cache. It also has a Dockerfile to easily create the container's image and set everything up.
 
 ## Technologies used
-<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original-wordmark.svg" width="70" height="70" /> &nbsp; &nbsp; <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original-wordmark.svg" width="70" height="70" /> &nbsp; &nbsp; <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original-wordmark.svg" width="70" height="70" /> &nbsp; &nbsp; <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original-wordmark.svg" width="70" height="70" />
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original-wordmark.svg" width="70" height="70" /> &nbsp; &nbsp; <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original-wordmark.svg" width="70" height="70" /> &nbsp; &nbsp; <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original-wordmark.svg" width="70" height="70" /> &nbsp; &nbsp; <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original-wordmark.svg" width="70" height="70" /> &nbsp; &nbsp; <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original-wordmark.svg" width="70" height="70" />
 
 ## How does it work
 
@@ -36,6 +36,8 @@ Keep in mind that creating a product **does not** set its price and stock. There
 - Logs are written to a file called **application-info.log** located in the **logs** folder. Each request is traced and the information about it (request, response and elapsed time) is also printed.
   <img src="img/logs.PNG"/>
 
+- The system manages environmental variables in the **application-yml** file, so that DEV and PROD environment can have different variables.
+
 ### Exceptions
 If the request cannot be proxied to the requested URL, one of the following exceptions will appear on your browser:
 
@@ -50,3 +52,11 @@ If the request cannot be proxied to the requested URL, one of the following exce
 <img src="img/error-002.PNG"/>
 <img src="img/error-003.PNG"/>
 <img src="img/error-004.PNG"/>
+
+## How to run the application
+
+To start the system quickly and easily, follow these steps:
+- Make sure you have Docker installed
+- Open your terminal and change your location to the project's root folder
+- Build the app image by running the following command: **docker build digital-product:1.0 .** (This command uses of the Dockerfile)
+- Run a Postgres container (e.g. postgres:13.1-alpine), a Redis container (e.g. redis:6.2.6) and the recently built app image.

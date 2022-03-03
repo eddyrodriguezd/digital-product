@@ -7,6 +7,7 @@ import com.demo.digitalproduct.dto.ProductDto;
 import com.demo.digitalproduct.entity.Product;
 import com.demo.digitalproduct.entity.ProductDetail;
 import com.demo.digitalproduct.repository.ProductRepository;
+import com.demo.digitalproduct.repository.exception.ProductNotFoundInDatabaseException;
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,7 @@ import java.util.UUID;
 
 import static com.demo.digitalproduct.util.TestingUtil.getMappedObjectFromFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -120,6 +122,22 @@ class ProductServiceImplTest {
         assertEquals(productExternalInfo.getPrice(), productDtoOutput.getDetail().getCurrentPrice());
         assertEquals(productExternalInfo.getStock(), productDtoOutput.getDetail().getCurrentStock());
         verify(productRepository, times(1)).findById(randomProductUUID);
+    }
+
+    @Test
+    void getProductById_ProductNotFoundInDatabaseException() {
+        // Arrange
+        UUID randomProductUUID = UUID.randomUUID();
+        productDto.setId(randomProductUUID.toString());
+        productEntity.setId(randomProductUUID);
+        productExternalInfo.setId(randomProductUUID.toString());
+
+        when(cacheService.getFromCache(randomProductUUID.toString())).thenReturn(null);
+        when(productRepository.findById(randomProductUUID)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ProductNotFoundInDatabaseException.class,
+                () -> productService.getProductById(randomProductUUID.toString()));
     }
 
     @Test

@@ -41,9 +41,8 @@ class CacheServiceImplTest {
         }
 
         @Bean
-        AppConfig appConfig() {
+        public AppConfig appConfig() {
             return AppConfig.builder()
-                    .productExternalInfoEndpoint("http://localhost:1080//api/inventory/products/{id}")
                     .cache(AppConfig.Cache.builder()
                             .host("localhost")
                             .port(6379)

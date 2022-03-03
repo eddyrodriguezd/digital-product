@@ -6,6 +6,6 @@ import org.springframework.http.HttpStatus;
 public class ProductNotFoundInDatabaseException extends ApiException {
 
     public ProductNotFoundInDatabaseException() {
-        super("001", HttpStatus.NOT_FOUND, "Request product couldn't be found in database");
+        super("001", HttpStatus.NOT_FOUND, "Requested product couldn't be found in database");
     }
 }

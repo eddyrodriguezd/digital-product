@@ -2,7 +2,8 @@ package com.demo.digitalproduct.controller;
 
 import com.demo.digitalproduct.client.exception.GenericProductInfoApiException;
 import com.demo.digitalproduct.exception.ApiException;
-import com.demo.digitalproduct.exception.IllegalUUID;
+import com.demo.digitalproduct.exception.IllegalProductDtoException;
+import com.demo.digitalproduct.exception.IllegalUUIDException;
 import com.demo.digitalproduct.repository.exception.ProductNotFoundInDatabaseException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +24,8 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {
             ProductNotFoundInDatabaseException.class,
             GenericProductInfoApiException.class,
-            IllegalUUID.class
+            IllegalUUIDException.class,
+            IllegalProductDtoException.class
     })
     protected ResponseEntity<Object> handleInvalidURL(RuntimeException exception, WebRequest request) {
         ApiException ex = (ApiException) exception;

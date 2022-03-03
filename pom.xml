@@ -26,6 +26,7 @@
         <spring.version>2.6.4</spring.version>
         <lombok.version>1.18.22</lombok.version>
         <commons-lang.version>3.12.0</commons-lang.version>
+        <hibernate-validator.version>6.0.20.Final</hibernate-validator.version>
         <flyway.version>8.5.1</flyway.version>
         <postgres.version>42.3.3</postgres.version>
         <jedis.version>3.7.1</jedis.version>
@@ -80,6 +81,11 @@
                 <groupId>redis.clients</groupId>
                 <artifactId>jedis</artifactId>
                 <version>${jedis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-validator.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.flywaydb</groupId>

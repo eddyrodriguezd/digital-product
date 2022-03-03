@@ -7,12 +7,14 @@ import com.demo.digitalproduct.dto.ProductDetailDto;
 import com.demo.digitalproduct.dto.ProductDto;
 import com.demo.digitalproduct.entity.Product;
 import com.demo.digitalproduct.entity.ProductDetail;
+import com.demo.digitalproduct.exception.IllegalProductDtoException;
 import com.demo.digitalproduct.repository.ProductRepository;
 import com.demo.digitalproduct.repository.exception.ProductNotFoundInDatabaseException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
 import java.util.UUID;
 
 import static com.demo.digitalproduct.helper.UuidHelper.getStringFromUUID;
@@ -25,17 +27,24 @@ public class ProductServiceImpl implements ProductService {
     private final ProductExternalInfoClient productClient;
 
     private final CacheService cacheService;
+    private final ValidationService validationService;
 
     public ProductServiceImpl(ProductRepository productRepository,
                               ProductExternalInfoClient productClient,
-                              CacheService cacheService) {
+                              CacheService cacheService,
+                              ValidationService validationService) {
         this.productRepository = productRepository;
         this.productClient = productClient;
         this.cacheService = cacheService;
+        this.validationService = validationService;
     }
 
     @Override
     public ProductDto createProduct(ProductDto productDto) {
+        Set<String> violations = validationService.validateProductDto(productDto);
+        if (violations.size() > 0)
+            throw new IllegalProductDtoException(violations);
+
         Product product = productRepository.save(
                 Product.builder()
                         .sku(productDto.getSku())
@@ -90,6 +99,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto updateProduct(String productId, ProductDto productDto) {
+        Set<String> violations = validationService.validateProductDto(productDto);
+        if (violations.size() > 0)
+            throw new IllegalProductDtoException(violations);
+
         if(!this.existsById(productId)) throw new ProductNotFoundInDatabaseException();
 
         Product product = productRepository.save(
@@ -133,4 +146,6 @@ public class ProductServiceImpl implements ProductService {
 
         return productRepository.existsById(getStringFromUUID(productId));
     }
+
+
 }

@@ -6,6 +6,7 @@ import com.demo.digitalproduct.client.response.ProductExternalInfoSuccessRespons
 import com.demo.digitalproduct.dto.ProductDto;
 import com.demo.digitalproduct.entity.Product;
 import com.demo.digitalproduct.entity.ProductDetail;
+import com.demo.digitalproduct.exception.IllegalProductDtoException;
 import com.demo.digitalproduct.repository.ProductRepository;
 import com.demo.digitalproduct.repository.exception.ProductNotFoundInDatabaseException;
 import org.apache.commons.lang3.SerializationUtils;
@@ -19,11 +20,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.demo.digitalproduct.util.TestingUtil.getMappedObjectFromFile;
@@ -43,8 +45,9 @@ class ProductServiceImplTest {
         public ProductService productService(
                 final ProductRepository productRepository,
                 final ProductExternalInfoClient productClient,
-                final CacheService cacheService) {
-            return new ProductServiceImpl(productRepository, productClient, cacheService);
+                final CacheService cacheService,
+                final ValidationServiceImpl validationService) {
+            return new ProductServiceImpl(productRepository, productClient, cacheService, validationService);
         }
     }
 
@@ -59,6 +62,9 @@ class ProductServiceImplTest {
 
     @MockBean
     private CacheService cacheService;
+
+    @MockBean
+    private ValidationServiceImpl validationService;
 
     private static ProductDto productDto;
     private static final String PRODUCT_DTO = "productDto.json";
@@ -91,6 +97,7 @@ class ProductServiceImplTest {
         fullProductDetailEntity.setCreatedAt(LocalDateTime.now().minusDays(1));
         fullProductEntity.setDetail(fullProductDetailEntity);
 
+        when(validationService.validateProductDto(productDto)).thenReturn(new HashSet<>());
         when(productRepository.save(productEntity)).thenReturn(fullProductEntity);
 
         // Act
@@ -98,6 +105,30 @@ class ProductServiceImplTest {
 
         // Assert
         assertEquals(randomProductUUID.toString(), productDtoOutput.getId());
+    }
+
+    @Test
+    void createProduct_IllegalProductDtoException() {
+        // Arrange
+        UUID randomProductUUID = UUID.randomUUID();
+        UUID randomProductDetailUUID = UUID.randomUUID();
+
+        Product fullProductEntity = SerializationUtils.clone(productEntity);
+        fullProductEntity.setId(randomProductUUID);
+        fullProductEntity.setDescription(null);
+
+        ProductDetail fullProductDetailEntity = fullProductEntity.getDetail();
+        fullProductDetailEntity.setId(randomProductDetailUUID);
+        fullProductDetailEntity.setUpdatedAt(LocalDateTime.now());
+        fullProductDetailEntity.setCreatedAt(LocalDateTime.now().minusDays(1));
+        fullProductEntity.setDetail(fullProductDetailEntity);
+
+        when(validationService.validateProductDto(productDto))
+                .thenReturn(Set.of("description cannot be null"));
+
+        // Act & Assert
+        assertThrows(IllegalProductDtoException.class,
+                () -> productService.createProduct(productDto));
     }
 
     @Test

@@ -6,6 +6,6 @@ import org.springframework.http.HttpStatus;
 public class ProductNotFoundInApiException extends ApiException {
 
     public ProductNotFoundInApiException() {
-        super("004", HttpStatus.NOT_FOUND, "Price and Stock Information Server does not have information about request product");
+        super("005", HttpStatus.NOT_FOUND, "Price and Stock Information Server does not have information about request product");
     }
 }

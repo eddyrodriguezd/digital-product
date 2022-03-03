@@ -1,6 +1,6 @@
 package com.demo.digitalproduct.helper;
 
-import com.demo.digitalproduct.exception.IllegalUUID;
+import com.demo.digitalproduct.exception.IllegalUUIDException;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -22,7 +22,7 @@ class UuidHelperTest {
         //Assert
         assertEquals(validUUID.toString(), validUUIDStr);
 
-        assertThrows(IllegalUUID.class, () -> UuidHelper.getStringFromUUID(tooLongUUIDStr));
-        assertThrows(IllegalUUID.class, () -> UuidHelper.getStringFromUUID(noHyphensUUIDStr));
+        assertThrows(IllegalUUIDException.class, () -> UuidHelper.getStringFromUUID(tooLongUUIDStr));
+        assertThrows(IllegalUUIDException.class, () -> UuidHelper.getStringFromUUID(noHyphensUUIDStr));
     }
 }
